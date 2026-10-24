@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Food Blog</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap 4 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+
+    <!-- Google font used by the blog title -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Sacramento&display=swap" rel="stylesheet">
+
+    <!-- Site styles (external) -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- VUE -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+</head>
+<body>
+
+<div id="app">
+
+    <!-- Header: brand + navigation (navigation is a VUE local component) -->
+    <header class="site-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-4 text-center text-md-left">
+                    <span class="brand">{{ blog.title }}</span>
+                </div>
+                <div class="col-md-8">
+                    <main-nav v-bind:links="navLinks"></main-nav>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container py-4">
+        <div class="row">
+
+            <!-- Recipe photo column -->
+            <aside class="col-md-4 col-lg-3 mb-4 text-center">
+                <figure class="recipe-photo">
+                    <img v-bind:src="blog.photo.src"
+                         v-bind:alt="blog.photo.alt"
+                         class="img-fluid rounded">
+                    <figcaption class="mt-2 font-weight-bold">{{ blog.photo.alt }}</figcaption>
+                </figure>
+            </aside>
+
+            <!-- Comments column -->
+            <section id="blogposts" class="col-md-8 col-lg-9">
+                <h2 class="comments-heading mb-4">{{ blog.commentsHeading }}</h2>
+
+                <article class="card post mb-4 shadow-sm"
+                         v-for="post in posts"
+                         v-bind:key="post.author">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center flex-wrap mb-2">
+                            <img class="profile mr-2"
+                                 v-bind:src="blog.profileImage"
+                                 v-bind:alt="'Profile picture of ' + post.author"
+                                 v-on:click="showAuthor(post)">
+                            <span class="author font-weight-bold">{{ post.author }}</span>
+                            <span class="text-muted ml-2 mr-2">&mdash; {{ post.date }}</span>
+                            <a href="#" class="reply badge badge-pill badge-info">{{ blog.replyLabel }}</a>
+                        </div>
+                        <p class="card-text mb-0">{{ post.comment }}</p>
+                    </div>
+                </article>
+            </section>
+
+        </div>
+    </main>
+
+    <footer class="site-footer text-center py-3">
+        <small>{{ blog.footer }}</small>
+    </footer>
+
+    <!-- Floating author info box (shown only when an author is selected) -->
+    <div class="author-overlay" v-if="selectedAuthor" v-on:click.self="closeAuthor">
+        <div class="author-box shadow-lg" role="dialog" aria-modal="true">
+            <button type="button" class="close text-white" v-on:click="closeAuthor" aria-label="Close">&times;</button>
+            <h3>{{ selectedAuthor.author }}</h3>
+            <p class="mb-2"><span class="label">Foodie Level:</span> {{ selectedAuthor.level }}</p>
+            <p><span class="label">Bio:</span><br>{{ selectedAuthor.bio }}</p>
+            <button type="button" class="btn btn-sm btn-success" v-on:click="closeAuthor">Close</button>
+        </div>
+    </div>
+
+</div>
+
+<!-- Bootstrap 4 JS dependencies (needed for the collapsing navbar) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- VUE app (external) -->
+<script src="js/app.js"></script>
+</body>
+</html>
